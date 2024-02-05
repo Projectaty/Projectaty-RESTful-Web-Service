@@ -20,3 +20,5 @@ class TeamQuery:
         finally:
             cursor.close() 
             conn.close()  
+
+            # Sondos was here 
