@@ -11,8 +11,8 @@ class ProjectQuery:
             conn = mysql.connect()
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             cursor.execute("SELECT * FROM project")
-            studentsRows = cursor.fetchall()
-            respone = jsonify(studentsRows)
+            projectsRows = cursor.fetchall()
+            respone = jsonify(projectsRows)
             respone.status_code = 200
             return respone
         except Exception as e:
