@@ -12,7 +12,7 @@ class TaskQuery:
             cursor = conn.cursor(pymysql.cursors.DictCursor)
             cursor.execute("SELECT * FROM task")
             tasksRows = cursor.fetchall()
-            respone = jsonify(studentsRows)
+            respone = jsonify(tasksRows)
             respone.status_code = 200
             return respone
         except Exception as e:
