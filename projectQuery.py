@@ -4,7 +4,7 @@ from flask import request
 from config import mysql
 import pymysql
 
-class projectQuery:
+class ProjectQuery:
     @app.route('/projects')
     def getProjects():
         try:
