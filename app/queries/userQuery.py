@@ -1,11 +1,10 @@
-from app import app
 from flask import jsonify, request
 from app.queries.mysqlconnect import execute_query
 from flask import Blueprint
 
 bp = Blueprint('user', __name__)
 
-@app.route('/studentsI', methods=['POST'])
+@bp.route('/studentsI', methods=['POST'])
 def add_student():
     try:
         data = request.json
@@ -27,7 +26,7 @@ def add_student():
         response.status_code = 500
         return response
 
-@app.route('/students/<int:student_id>', methods=['DELETE'])
+@bp.route('/students/<int:student_id>', methods=['DELETE'])
 def delete_student(student_id):
     try:
         query = "DELETE FROM student WHERE student_id = %s"
@@ -42,7 +41,7 @@ def delete_student(student_id):
         response.status_code = 500
         return response
 
-@app.route('/studentsU', methods=['PUT'])
+@bp.route('/studentsU', methods=['PUT'])
 def update_student():
     try:
         data = request.json
@@ -64,7 +63,7 @@ def update_student():
         response.status_code = 500
         return response
 
-@app.route('/studentsS')
+@bp.route('/studentsS')
 def get_students():
     try:
         query = "SELECT * FROM student"
@@ -79,7 +78,7 @@ def get_students():
         response.status_code = 500
         return response
 
-@app.route('/students/<int:id>', methods=['GET'])
+@bp.route('/students/<int:id>', methods=['GET'])
 def get_student_by_id(id):
     try:
         query = "SELECT * FROM student WHERE id = %s"
