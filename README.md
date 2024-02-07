@@ -9,8 +9,8 @@ This is a websersvice created by Flask.
   - team
 
 To start the webservice and use the urls genrated, 
-- First refer to the mysql reposity
-- Run the MySQL script to creat the database
+- First refer to the mysql reposity https://github.com/Projectaty/Projectaty-MySQL-DB
+- Run the MySQL script to creat the database 
 - Run the insert queries
 - Can use xamp for local host server
 
