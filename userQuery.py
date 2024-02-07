@@ -2,8 +2,7 @@ from flask import jsonify
 from flask import request
 import pymysql
 from flask import Blueprint
-from flaskext.mysql import MySQL
-mysql = MySQL()
+from app import mysql
 
 bp = Blueprint('/user', __name__)
 

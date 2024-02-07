@@ -2,9 +2,8 @@ from flask import jsonify
 from flask import request
 import pymysql
 from flask import Blueprint
-from flaskext.mysql import MySQL
+from app import mysql
 
-mysql = MySQL()
 bp = Blueprint('team', __name__)
 
 @bp.route('/all')
