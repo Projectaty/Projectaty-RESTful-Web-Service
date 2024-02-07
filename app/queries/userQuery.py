@@ -1,13 +1,12 @@
 from flask import jsonify
 from flask import request
-import pymysql
 from flask import Blueprint
-from app import mysql
+from app.queries.mysqlconnect import execute_query
 
 bp = Blueprint('/user', __name__)
 
-@bp.route('/studentsI', methods=['POST'])
-def addStudent():
+@bp.route('/students', methods=['POST'])
+def add_student():
     try:
         data = request.json
         name = data['name']
@@ -15,15 +14,9 @@ def addStudent():
         profile_pic = data['profile_pic']
         password = data['password']
 
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        
-        cursor.execute("INSERT INTO student (name, email, profile_pic, password) VALUES (%s, %s, %s, %s)",
-                        (name, email, profile_pic, password))
-        
-        conn.commit()
-        cursor.close()
-        conn.close()
+        query = "INSERT INTO student (name, email, profile_pic, password) VALUES (%s, %s, %s, %s)"
+        execute_query(query, (name, email, profile_pic, password))
+
         response = jsonify({'message': 'Student information inserted successfully'})
         response.status_code = 200
         return response
@@ -32,18 +25,13 @@ def addStudent():
         response = jsonify({'error': 'An error occurred while inserting student information'})
         response.status_code = 500
         return response
-    
+
 @bp.route('/students/<int:student_id>', methods=['DELETE'])
-def deleteStudent(student_id):
+def delete_student(student_id):
     try:
-        
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("DELETE FROM student WHERE student_id = %s", (student_id,))
-        
-        conn.commit()
-        cursor.close()
-        conn.close()
+        query = "DELETE FROM student WHERE student_id = %s"
+        execute_query(query, (student_id,))
+
         response = jsonify({'message': 'Student account deleted successfully'})
         response.status_code = 200
         return response
@@ -52,51 +40,40 @@ def deleteStudent(student_id):
         response = jsonify({'error': 'An error occurred while deleting student account'})
         response.status_code = 500
         return response
-    
-@bp.route('/studentsU', methods=['PUT'])
-def updateStudent():
+
+@bp.route('/students', methods=['PUT'])
+def update_student():
     try:
-        
         data = request.json
         student_id = data['student_id']
         name = data['name']
         email = data['email']
         profile_pic = data['profile_pic']
         password = data['password']
-        
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        
-        cursor.execute("UPDATE student SET name=%s, email=%s, profile_pic=%s, password=%s WHERE student_id=%s",
-                        (name, email, profile_pic, password, student_id))
-        
-        conn.commit()
-        cursor.close()
-        conn.close()
-        
+
+        query = "UPDATE student SET name=%s, email=%s, profile_pic=%s, password=%s WHERE student_id=%s"
+        execute_query(query, (name, email, profile_pic, password, student_id))
+
         response = jsonify({'message': 'Student information updated successfully'})
         response.status_code = 200
         return response
     except Exception as e:
-        
         print(e)
-        
         response = jsonify({'error': 'An error occurred while updating student information'})
         response.status_code = 500
         return response
-    
-@bp.route('/studentsS')
-def getStudents():
+
+@bp.route('/students', methods=['GET'])
+def get_students():
     try:
-        conn = mysql.connect()
-        cursor = conn.cursor(pymysql.cursors.DictCursor)
-        cursor.execute("SELECT * FROM student")
-        studentsRows = cursor.fetchall()
-        respone = jsonify(studentsRows)
-        respone.status_code = 200
-        return respone
+        query = "SELECT * FROM student"
+        students_rows = execute_query(query, fetch_all=True)
+
+        response = jsonify(students_rows)
+        response.status_code = 200
+        return response
     except Exception as e:
         print(e)
-    finally:
-        cursor.close() 
-        conn.close() 
+        response = jsonify({'error': 'An error occurred while fetching student information'})
+        response.status_code = 500
+        return response

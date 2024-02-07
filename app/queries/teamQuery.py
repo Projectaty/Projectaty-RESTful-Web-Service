@@ -2,7 +2,7 @@ from flask import jsonify
 from flask import request
 import pymysql
 from flask import Blueprint
-from app import mysql
+from run import mysql
 
 bp = Blueprint('team', __name__)
 

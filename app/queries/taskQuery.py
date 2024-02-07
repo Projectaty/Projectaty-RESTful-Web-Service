@@ -3,7 +3,7 @@ from flask import request
 import pymysql
 from flask import Blueprint
 from flaskext.mysql import MySQL
-from app import mysql
+from run import mysql
 
 bp = Blueprint('task', __name__)
 
