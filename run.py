@@ -1,6 +1,10 @@
 from app import create_app
 
 """
+    This is a web service that connects to mysql database on the local host 
+    and returns teh data jonisfied within URLs, the URLs
+    will then be used with volley in a mobile application context
+    
     MAIN
     - Creat App from __init__ => configured, + CROS
     - register blueprints for each query 
