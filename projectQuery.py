@@ -1,13 +1,15 @@
-from app import app
 from flask import jsonify
 from flask import request
-from config import mysql
+
 import pymysql
 from flask import Blueprint
+from flaskext.mysql import MySQL
 
-bp = Blueprint("project", __name__)
+mysql = MySQL()
 
-@app.route('/all')
+bp = Blueprint('project', __name__)
+
+@bp.route('/all')
 def getProjects():
     try:
         conn = mysql.connect()

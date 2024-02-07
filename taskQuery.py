@@ -1,13 +1,15 @@
-from app import app
+from __init__ import create_app
 from flask import jsonify
 from flask import request
-from config import mysql
 import pymysql
 from flask import Blueprint
+from flaskext.mysql import MySQL
 
-bp = Blueprint("task", __name__)
+mysql = MySQL()
 
-@app.route('/all')
+bp = Blueprint('task', __name__)
+
+@bp.route('/all')
 def getProjects():
     try:
         conn = mysql.connect()
@@ -22,3 +24,12 @@ def getProjects():
     finally:
         cursor.close() 
         conn.close()  
+
+# @appi.route('/add')
+# def addProject():
+
+# @appi.route('/delete')
+# def deleteProject():
+
+# @appi.route('/update')
+# def updateProject():

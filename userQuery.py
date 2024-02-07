@@ -1,13 +1,13 @@
-from app import app
 from flask import jsonify
 from flask import request
-from config import mysql
 import pymysql
 from flask import Blueprint
+from flaskext.mysql import MySQL
+mysql = MySQL()
 
-bp = Blueprint("user", __name__)
+bp = Blueprint('/user', __name__)
 
-@app.route('/studentsI', methods=['POST'])
+@bp.route('/studentsI', methods=['POST'])
 def addStudent():
     try:
         data = request.json
@@ -22,7 +22,6 @@ def addStudent():
         cursor.execute("INSERT INTO student (name, email, profile_pic, password) VALUES (%s, %s, %s, %s)",
                         (name, email, profile_pic, password))
         
-        
         conn.commit()
         cursor.close()
         conn.close()
@@ -35,7 +34,7 @@ def addStudent():
         response.status_code = 500
         return response
     
-@app.route('/students/<int:student_id>', methods=['DELETE'])
+@bp.route('/students/<int:student_id>', methods=['DELETE'])
 def deleteStudent(student_id):
     try:
         
@@ -55,7 +54,7 @@ def deleteStudent(student_id):
         response.status_code = 500
         return response
     
-@app.route('/studentsU', methods=['PUT'])
+@bp.route('/studentsU', methods=['PUT'])
 def updateStudent():
     try:
         
@@ -87,7 +86,7 @@ def updateStudent():
         response.status_code = 500
         return response
     
-@app.route('/studentsS')
+@bp.route('/studentsS')
 def getStudents():
     try:
         conn = mysql.connect()

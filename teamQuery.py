@@ -1,13 +1,13 @@
-from app import app
 from flask import jsonify
 from flask import request
-from config import mysql
 import pymysql
 from flask import Blueprint
+from flaskext.mysql import MySQL
 
-bp = Blueprint("team", __name__)
+mysql = MySQL()
+bp = Blueprint('team', __name__)
 
-@app.route('/all')
+@bp.route('/all')
 def getTeams():
     try:
         conn = mysql.connect()
