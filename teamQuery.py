@@ -8,7 +8,7 @@ from flask import Blueprint
 bp = Blueprint("team", __name__)
 
 @app.route('/all')
-def getProjects():
+def getTeams():
     try:
         conn = mysql.connect()
         cursor = conn.cursor(pymysql.cursors.DictCursor)
