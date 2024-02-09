@@ -150,7 +150,7 @@ def delete_team_member(member_id):
 
     try:
         query = "DELETE FROM TeamMEmbership WHERE StudentID = %s"
-        execute_query(query, (student_id,), commit=True)
+        execute_query(query, (member_id,), commit=True)
 
         """ Return respose message if successfuly deletd """
         response = jsonify({'message': 'Student deleted successfully'})
