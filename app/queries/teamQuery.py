@@ -7,15 +7,11 @@ bp = Blueprint('team', __name__)
 @bp.route('/all', methods=['GET'])
 def get_teams():
     try:
-        query = "SELECT * FROM Team"
-        teams = execute_query(query)
-
-        if teams:
-            response = jsonify(teams)
-            response.status_code = 200
-            return response
-        else:
-            return jsonify({"message": "No teams found"}), 404
+        query = "SELECT * FROM team"
+        teams = execute_query(query, fetch_all=True)
+        response = jsonify(teams)
+        response.status_code = 200
+        return response
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
@@ -25,18 +21,15 @@ def get_teams():
 def get_team_by_id(team_id):
     try:
         query = "SELECT * FROM Team WHERE TeamID = %s"
-        team_row = execute_query(query, (team_id), fetch_one=True)
+        team_row = execute_query(query, (team_id), fetch_all=True)
 
-        if team_row:
-            response = jsonify(team_row)
-            response.status_code = 200
-            return response
-        else:
-            return jsonify({"message": "team not found"}), 404
+        response = jsonify(team_row)
+        response.status_code = 200
+        return response
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
-    
+  
 # Add Team data
 @bp.route('/add', methods=['POST'])
 def add_team():
@@ -49,7 +42,7 @@ def add_team():
         status = data['Status']
         
         query = "INSERT INTO Team (TeamID, TeamName, Description, Status) VALUES (%s, %s, %s, %s)"
-        execute_query(query, (team_id, team_name, description, status), commit=True)
+        execute_query(query, (team_id, team_name, description, status))
         
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Team information inserted successfully'})
@@ -68,7 +61,7 @@ def delete_team(team_id):
 
     try:
         query = "DELETE FROM Team WHERE TeamID = %s"
-        execute_query(query, (team_id,), commit=True)
+        execute_query(query, (team_id,))
 
         """ Return respose message if successfuly deletd """
         response = jsonify({'message': 'Team deleted successfully'})
@@ -82,8 +75,8 @@ def delete_team(team_id):
         return response
 
 # update team data
-@bp.route('/update', methods=['PUT'])
-def update_team():
+@bp.route('/update/<int:task_id>', methods=['PUT'])
+def update_team(task_id):
 
     try:
         data = request.json
@@ -93,7 +86,7 @@ def update_team():
         status = data['Status']
 
         query = "UPDATE Team SET TeamName=%s, Description=%s, Status=%s WHERE TeamID=%s"
-        execute_query(query, (team_id, team_name, description, status), commit=True)
+        execute_query(query, (team_id, team_name, description, status))
 
         response = jsonify({'message': 'Team information updated successfully'})
         response.status_code = 200
@@ -115,7 +108,7 @@ def add_member():
         team_id = ['TeamID']
 
         query = "INSERT INTO members (member_id, team_id) VALUES (%s, %s)"
-        execute_query(query, (member_id, team_id), commit=True)
+        execute_query(query, (member_id, team_id))
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Member inserted successfully'})
         response.status_code = 200
@@ -128,12 +121,12 @@ def add_member():
         return response
     
 # Get team members
-@bp.route('/<int:team_id>/member', methods=['GET'])
-def get_members(student_id):
+@bp.route('/members/<int:team_id>', methods=['GET'])
+def get_members(member_id):
 
     try:
         query = "SELECT StudentId FROM TeamMEmbership WHERE TeamId=%s"
-        members_row = execute_query(query, (student_id), fetch_one=True)
+        members_row = execute_query(query, (member_id), fetch_all=True)
         if members_row:
             response = jsonify(members_row)
             response.status_code = 200
@@ -173,7 +166,7 @@ def add_project():
         team_id = ['TeamID']
 
         query = "INSERT INTO Collabration (project_id, team_id) VALUES (%s,%s)"
-        execute_query(query, (project_id, team_id), commit=True)
+        execute_query(query, (project_id, team_id))
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Project inserted successfully'})
         response.status_code = 200
@@ -186,12 +179,12 @@ def add_project():
         return response
     
 # Get team projects
-@bp.route('/<int:team_id>/project', methods=['GET'])
+@bp.route('/projecs/<int:team_id>t', methods=['GET'])
 def get_project(project_id):
 
     try:
         query = "SELECT PROJECTID FROM Collaboration WHERE TeamID=%s"
-        projects_row = execute_query(query, (project_id), fetch_one=True)
+        projects_row = execute_query(query, (project_id), fetch_all=True)
         if projects_row:
             response = jsonify(projects_row)
             response.status_code = 200
@@ -208,7 +201,7 @@ def delete_team_project(project_id):
 
     try:
         query = "DELETE FROM Collabraion WHERE ProjectID = %s"
-        execute_query(query, (project_id,), commit=True)
+        execute_query(query, (project_id,))
 
         """ Return respose message if successfuly deletd """
         response = jsonify({'message': 'Project deleted successfully'})
