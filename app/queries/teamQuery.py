@@ -144,6 +144,24 @@ def get_members(student_id):
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
 
+# Delete team member by ID
+@bp.route('/delete/<int:team_id>', methods=['DELETE'])
+def delete_team_member(member_id):
+
+    try:
+        query = "DELETE FROM TeamMEmbership WHERE StudentID = %s"
+        execute_query(query, (member_id,), commit=True)
+
+        """ Return respose message if successfuly deletd """
+        response = jsonify({'message': 'Student deleted successfully'})
+        response.status_code = 200
+        return response
+    except Exception as e:
+        """ Hadnle exceptions by printing the errors and put them in the response """
+        print(e)
+        response = jsonify({'error': 'An error occurred while deleting student'})
+        response.status_code = 500
+        return response
 
 # add project to the team
 @bp.route('/<int:team_id>/project', methods=['POST'])
@@ -183,3 +201,21 @@ def get_project(project_id):
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
+
+# Delete team project by ID
+@bp.route('/delete/<int:team_id>', methods=['DELETE'])
+def delete_team_project(project_id):
+
+    try:
+        query = "DELETE FROM Collabraion WHERE ProjectID = %s"
+        execute_query(query, (project_id,), commit=True)
+
+        """ Return respose message if successfuly deletd """
+        response = jsonify({'message': 'Project deleted successfully'})
+        response.status_code = 200
+        return response
+    except Exception as e:
+        """ Hadnle exceptions by printing the errors and put them in the response """
+        print(e)
+        response = jsonify({'error': 'An error occurred while deleting project'})
+        response.status_code = 500
