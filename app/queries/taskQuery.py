@@ -124,7 +124,7 @@ def update_task(task_id):
         assigned_to = data['AssignedTo']
 
         query = "UPDATE task SET ProjectID=%s, Title=%s, Description=%s, Status=%s, AssignedTo=%s WHERE TaskID=%s"
-        execute_query(query, (project_id, title, description, status, assigned_to, task_id),)
+        execute_query(query, (project_id, title, description, status, assigned_to, task_id))
 
         response = jsonify({'message': 'Task information updated successfully'})
         response.status_code = 200
