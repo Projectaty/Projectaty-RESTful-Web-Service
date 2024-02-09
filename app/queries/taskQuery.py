@@ -18,22 +18,17 @@ bp = Blueprint('task', __name__)
 def get_tasks():
     """
         Returns:
-            the task attributes with specific ID
+            the task attributes for all tasks
     """
     try:
-        query = "SELECT * FROM Task"
-        task_row = execute_query(query)
-
-        if task_row:
-            response = jsonify(task_row)
-            response.status_code = 200
-            return response
-        else:
-            return jsonify({"message": "No tasks found"}), 404
+        query = "SELECT * FROM task"
+        tasks_rows = execute_query(query, fetch_all=True)
+        response = jsonify(tasks_rows)
+        response.status_code = 200
+        return response
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
-
 
 ## Get the data of task by ID
 @bp.route('/<int:task_id>', methods=['GET'])
@@ -45,15 +40,11 @@ def get_task_by_id(task_id):
             the task attributes with specific ID
     """
     try:
-        query = "SELECT * FROM Task WHERE TaskID = %s"
-        task_row = execute_query(query, (task_id,), fetch_one=True)
-
-        if task_row:
-            response = jsonify(task_row)
-            response.status_code = 200
-            return response
-        else:
-            return jsonify({"message": "Task not found"}), 404
+        query = "SELECT * FROM task WHERE TaskID = %s"
+        task_row = execute_query(query, (task_id), fetch_all=True)
+        response = jsonify(task_row)
+        response.status_code = 200
+        return response
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
@@ -77,8 +68,8 @@ def add_task():
         status = data['Status']
         assigned_to = data['AssignedTo']
 
-        query = "INSERT INTO Task (TaskID, ProjectID, Title, Description, Status, AssignedTo) VALUES (%s, %s, %s, %s, %s, %s)"
-        execute_query(query, (task_id, project_id, title, description, status, assigned_to), commit=True)
+        query = "INSERT INTO task (TaskID, ProjectID, Title, Description, Status, AssignedTo) VALUES (%s, %s, %s, %s, %s, %s)"
+        execute_query(query, (task_id, project_id, title, description, status, assigned_to))
         
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Task information inserted successfully'})
@@ -101,8 +92,8 @@ def delete_task(task_id):
             response, etheir message or error
     """
     try:
-        query = "DELETE FROM Task WHERE TaskID = %s"
-        execute_query(query, (task_id,), commit=True)
+        query = " DELETE FROM task WHERE TaskID = %s"
+        execute_query(query, (task_id))
 
         """ Return respose message if successfuly deletd """
         response = jsonify({'message': 'Task deleted successfully'})
@@ -116,8 +107,8 @@ def delete_task(task_id):
         return response
 
 ## update the task 
-@bp.route('/update', methods=['PUT'])
-def update_task():
+@bp.route('/update/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
     """
         Args:
             None takes teh data from Json request
@@ -126,15 +117,14 @@ def update_task():
     """
     try:
         data = request.json
-        task_id = data['TaskID']
         project_id = data['ProjectID']
         title = data['Title']
         description = data['Description']
         status = data['Status']
         assigned_to = data['AssignedTo']
 
-        query = "UPDATE Task SET ProjectID=%s, Title=%s, Description=%s, Status=%s, AssignedTo=%s WHERE TaskID=%s"
-        execute_query(query, (project_id, title, description, status, assigned_to, task_id), commit=True)
+        query = "UPDATE task SET ProjectID=%s, Title=%s, Description=%s, Status=%s, AssignedTo=%s WHERE TaskID=%s"
+        execute_query(query, (project_id, title, description, status, assigned_to, task_id),)
 
         response = jsonify({'message': 'Task information updated successfully'})
         response.status_code = 200
@@ -157,7 +147,7 @@ def get_done_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM Task WHERE Status=%s AND ProjectID=%s"
+        query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
         done_rows = execute_query(query,("done", project_id), fetch_all=True)
 
         response = jsonify(done_rows)
@@ -181,7 +171,7 @@ def get_inprogress_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM Task WHERE Status=%s AND ProjectID=%s"
+        query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
         done_rows = execute_query(query,("inprogress", project_id), fetch_all=True)
 
         response = jsonify(done_rows)
@@ -205,7 +195,7 @@ def get_todo_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM Task WHERE Status=%s AND ProjectID=%s"
+        query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
         done_rows = execute_query(query,("todo", project_id), fetch_all=True)
 
         response = jsonify(done_rows)
