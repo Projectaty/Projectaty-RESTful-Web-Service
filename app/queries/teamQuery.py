@@ -4,7 +4,24 @@ from app.queries.mysqlconnect import execute_query
 bp = Blueprint('team', __name__)
 
 # Get team data by ID
-@bp.route('/team/<int:team_id>', methods=['GET'])
+@bp.route('/all', methods=['GET'])
+def get_teams():
+    try:
+        query = "SELECT * FROM Team"
+        teams = execute_query(query)
+
+        if teams:
+            response = jsonify(teams)
+            response.status_code = 200
+            return response
+        else:
+            return jsonify({"message": "No teams found"}), 404
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "Internal Server Error"}), 500
+
+# Get team data by ID
+@bp.route('/<int:team_id>', methods=['GET'])
 def get_team_by_id(team_id):
     try:
         query = "SELECT * FROM Team WHERE TeamID = %s"
@@ -89,7 +106,7 @@ def update_team():
         return response
     
 # add member to the team
-@bp.route('/team/<int:team_id>/member', methods=['POST'])
+@bp.route('/<int:team_id>/member', methods=['POST'])
 def add_member():
 
     try:
@@ -111,7 +128,7 @@ def add_member():
         return response
     
 # Get team members
-@bp.route('/team/<int:team_id>/member', methods=['GET'])
+@bp.route('/<int:team_id>/member', methods=['GET'])
 def get_members(student_id):
 
     try:
@@ -129,7 +146,7 @@ def get_members(student_id):
 
 
 # add project to the team
-@bp.route('/team/<int:team_id>/project', methods=['POST'])
+@bp.route('/<int:team_id>/project', methods=['POST'])
 def add_project():
 
     try:
@@ -151,7 +168,7 @@ def add_project():
         return response
     
 # Get team projects
-@bp.route('/team/<int:team_id>/project', methods=['GET'])
+@bp.route('/<int:team_id>/project', methods=['GET'])
 def get_project(project_id):
 
     try:

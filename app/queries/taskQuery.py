@@ -13,8 +13,30 @@ from app.queries.mysqlconnect import execute_query
 """
 bp = Blueprint('task', __name__)
 
+## Get all the tasks
+@bp.route('/all', methods=['GET'])
+def get_tasks():
+    """
+        Returns:
+            the task attributes with specific ID
+    """
+    try:
+        query = "SELECT * FROM Task"
+        task_row = execute_query(query)
+
+        if task_row:
+            response = jsonify(task_row)
+            response.status_code = 200
+            return response
+        else:
+            return jsonify({"message": "No tasks found"}), 404
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "Internal Server Error"}), 500
+
+
 ## Get the data of task by ID
-@bp.route('/tasks/<int:task_id>', methods=['GET'])
+@bp.route('/<int:task_id>', methods=['GET'])
 def get_task_by_id(task_id):
     """
         Args: 

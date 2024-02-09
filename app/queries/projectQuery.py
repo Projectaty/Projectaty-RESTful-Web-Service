@@ -18,6 +18,22 @@ def getProjects():
         response.status_code = 500
         return response
 
+@bp.route('/<int:ProjectID>', methods=['GET'])
+def get_task_by_id(ProjectID):
+    try:
+        query = "SELECT * FROM project WHERE ProjectID = %s"
+        project_row = execute_query(query, (ProjectID), fetch_one=True)
+
+        if project_row:
+            response = jsonify(project_row)
+            response.status_code = 200
+            return response
+        else:
+            return jsonify({"message": "Project not found"}), 404
+    except Exception as e:
+        print(e)
+        return jsonify({"message": "Internal Server Error"}), 500
+
 @bp.route('/add', methods=['POST'])
 def addProject():
     try:
