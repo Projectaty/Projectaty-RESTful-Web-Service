@@ -28,9 +28,11 @@ def add_team():
         data = request.json
         team_id = data['TeamID']
         team_name = data['TeamName']
+        description = data['Description']
+        status = data['Status']
         
-        query = "INSERT INTO Team (TeamID, TeamName) VALUES (%s, %s)"
-        execute_query(query, (team_id, team_name), commit=True)
+        query = "INSERT INTO Team (TeamID, TeamName, Description, Status) VALUES (%s, %s, %s, %s)"
+        execute_query(query, (team_id, team_name, description, status), commit=True)
         
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Team information inserted successfully'})
@@ -70,9 +72,11 @@ def update_team():
         data = request.json
         team_id = data['TeamID']
         team_name = data['TeamName']
+        description = data['Description']
+        status = data['Status']
 
-        query = "UPDATE Team TeamName=%s WHERE TeamID=%s"
-        execute_query(query, (team_name, team_id), commit=True)
+        query = "UPDATE Team SET TeamName=%s, Description=%s, Status=%s WHERE TeamID=%s"
+        execute_query(query, (team_id, team_name, description, status), commit=True)
 
         response = jsonify({'message': 'Team information updated successfully'})
         response.status_code = 200
@@ -134,7 +138,7 @@ def add_project():
         team_id = ['TeamID']
 
         query = "INSERT INTO Collabration (project_id, team_id) VALUES (%s,%s)"
-        execute_query(query, (project_id), commit=True)
+        execute_query(query, (project_id, team_id), commit=True)
         """ If inserted succesfuly return a message"""
         response = jsonify({'message': 'Project inserted successfully'})
         response.status_code = 200

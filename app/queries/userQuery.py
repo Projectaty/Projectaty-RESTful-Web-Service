@@ -1,6 +1,5 @@
-from flask import jsonify, request
+from flask import jsonify, request, Blueprint
 from app.queries.mysqlconnect import execute_query
-from flask import Blueprint
 
 bp = Blueprint('user', __name__)
 
