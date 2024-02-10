@@ -115,14 +115,14 @@ def get_student_by_id(id):
 def get_student_by_name_and_password(name, password):
     try:
         query = "SELECT * FROM student WHERE username = %s AND password = %s"
-        student_row = execute_query(query, (name, password), fetch_all=True)
+        student_row = execute_query(query, (name, password))
 
         if student_row:
-            response = jsonify(student_row)
+            response = jsonify({"message":"login"})
             response.status_code = 200
             return response
         else:
-            return jsonify({"message": "Student not found"}), 404
+            return jsonify({"message":"noLogin"}), 404
     except Exception as e:
         print(e)
         return jsonify({"message": "Internal Server Error"}), 500
