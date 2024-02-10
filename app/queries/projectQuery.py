@@ -83,7 +83,7 @@ def delete_project(ProjectID):
         execute_query(query, (ProjectID))
 
         """ Return respose message if successfuly deletd """
-        response = jsonify({'message': 'ProjectID deleted successfully'})
+        response = jsonify({'message': 'Project Delteed successfully'})
         response.status_code = 200
         return response
     except Exception as e:
