@@ -137,7 +137,7 @@ def update_task(task_id):
         return response
 
 # fetch the done tasks for specifc fproject
-@bp.route('/done/<int:project_id>')
+@bp.route('/done/<int:project_id>', methods=['GET'])
 def get_done_tasks_in_project(project_id):
     """
         Args:
@@ -161,7 +161,7 @@ def get_done_tasks_in_project(project_id):
         return response
 
 # fetch the inprogress tasks for specifc fproject
-@bp.route('/inprogress/<int:project_id>')
+@bp.route('/inprogress/<int:project_id>', methods=['GET'])
 def get_inprogress_tasks_in_project(project_id):
     """
         Args:
