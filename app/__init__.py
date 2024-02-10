@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flaskext.mysql import MySQL
 
-def create_app(user='root', password='', db='projectatydb', host='127.0.0.1:500'):
+def create_app(user='root', password='', db='projectatydb', host='127.0.0.1'):
     """
     Import queries and regesiter the blueprints to the app
     Return:

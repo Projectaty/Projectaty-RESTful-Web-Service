@@ -185,7 +185,7 @@ def get_inprogress_tasks_in_project(project_id):
         return response
     
 # fetch the todo tasks for specifc fproject
-@bp.route('/todo/<int:project_id>')
+@bp.route('/todo/<int:project_id>', methods=['GET'])
 def get_todo_tasks_in_project(project_id):
     """
         Args:
@@ -195,7 +195,7 @@ def get_todo_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
+        query = "SELECT * FROM task WHERE Status='%s' OR ProjectID=%s"
         done_rows = execute_query(query,("todo", project_id), fetch_all=True)
 
         response = jsonify(done_rows)
