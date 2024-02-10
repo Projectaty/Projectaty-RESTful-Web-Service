@@ -28,8 +28,25 @@ def add_student():
 @bp.route('/studentsD/<int:student_id>', methods=['DELETE'])
 def delete_student(student_id):
     try:
-        query = "DELETE FROM student WHERE StudentID = %s"
-        execute_query(query, (student_id,))
+        # Delete related team membership records first
+        delete_membership_query = "DELETE FROM teammembership WHERE MemberID = %s"
+        execute_query(delete_membership_query, (student_id,))
+
+        # Delete related tasks records
+        delete_tasks_query = "DELETE FROM task WHERE ProjectID IN (SELECT ProjectID FROM project WHERE CreatorID = %s)"
+        execute_query(delete_tasks_query, (student_id,))
+
+        # Delete related collaboration records
+        delete_collaborations_query = "DELETE FROM collaboration WHERE ProjectID IN (SELECT ProjectID FROM project WHERE CreatorID = %s)"
+        execute_query(delete_collaborations_query, (student_id,))
+
+        # Delete related projects records
+        delete_projects_query = "DELETE FROM project WHERE CreatorID = %s"
+        execute_query(delete_projects_query, (student_id,))
+
+        # Finally, delete the student record
+        delete_student_query = "DELETE FROM student WHERE StudentID = %s"
+        execute_query(delete_student_query, (student_id,))
 
         response = jsonify({'message': 'Student account deleted successfully'})
         response.status_code = 200
