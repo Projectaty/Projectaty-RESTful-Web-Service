@@ -150,7 +150,7 @@ def get_done_tasks_in_project(project_id):
         query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
         done_rows = execute_query(query,("done", project_id), fetch_all=True)
 
-        response = jsonify(done_rows)
+        response = jsonify({"tasks": done_rows})
         response.status_code = 200
         return response
     except Exception as e:
@@ -172,9 +172,9 @@ def get_inprogress_tasks_in_project(project_id):
     """
     try:
         query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
-        done_rows = execute_query(query,("inprogress", project_id), fetch_all=True)
+        inprogress_rows = execute_query(query,("inprogress", project_id), fetch_all=True)
 
-        response = jsonify(done_rows)
+        response = jsonify({"tasks": inprogress_rows})
         response.status_code = 200
         return response
     except Exception as e:
@@ -195,10 +195,10 @@ def get_todo_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM task WHERE Status='%s' OR ProjectID=%s"
-        done_rows = execute_query(query,("todo", project_id), fetch_all=True)
+        query = "SELECT * FROM task WHERE Status=%s OR ProjectID=%s"
+        todo_rows = execute_query(query,("todo", project_id), fetch_all=True)
 
-        response = jsonify(done_rows)
+        response = jsonify({"tasks": todo_rows})
         response.status_code = 200
         return response
     except Exception as e:
