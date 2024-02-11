@@ -115,7 +115,7 @@ def get_student_by_id(id):
 def get_student_by_name_and_password(name, password):
     try:
         query = "SELECT * FROM student WHERE username = %s AND password = %s"
-        student_row = execute_query(query, (name, password))
+        student_row = execute_query(query, (name, password), fetch_all=True)
 
         if student_row:
             response = jsonify({"message":"login"})
