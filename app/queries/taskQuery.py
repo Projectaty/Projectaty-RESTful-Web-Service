@@ -195,7 +195,7 @@ def get_todo_tasks_in_project(project_id):
             or an error response
     """
     try:
-        query = "SELECT * FROM task WHERE Status=%s OR ProjectID=%s"
+        query = "SELECT * FROM task WHERE Status=%s AND ProjectID=%s"
         todo_rows = execute_query(query,("todo", project_id), fetch_all=True)
 
         response = jsonify({"tasks": todo_rows})
