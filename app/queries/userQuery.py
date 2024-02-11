@@ -118,7 +118,7 @@ def get_student_by_name_and_password(name, password):
         student_row = execute_query(query, (name, password), fetch_all=True)
 
         if student_row:
-            response = jsonify({"message":"login"})
+            response = jsonify({"message":"login","student":student_row})
             response.status_code = 200
             return response
         else:
