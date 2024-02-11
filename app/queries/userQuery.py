@@ -3,7 +3,7 @@ from app.queries.mysqlconnect import execute_query
 
 bp = Blueprint('user', __name__)
 
-@bp.route('/studentsI', methods=['POST'])
+@bp.route('/add', methods=['POST'])
 def add_student():
     try:
         data = request.json
@@ -25,7 +25,7 @@ def add_student():
         response.status_code = 500
         return response
 
-@bp.route('/studentsD/<int:student_id>', methods=['DELETE'])
+@bp.route('/delete/<int:student_id>', methods=['DELETE'])
 def delete_student(student_id):
     try:
         # Delete related team membership records first
@@ -57,7 +57,7 @@ def delete_student(student_id):
         response.status_code = 500
         return response
 
-@bp.route('/studentsU/<int:student_id>', methods=['PUT'])
+@bp.route('/update/<int:student_id>', methods=['PUT'])
 def update_student(student_id):
     try:
         data = request.json
@@ -79,7 +79,7 @@ def update_student(student_id):
         response.status_code = 500
         return response
 
-@bp.route('/studentsS')
+@bp.route('/all')
 def get_students():
     try:
         query = "SELECT * FROM student"
@@ -94,7 +94,7 @@ def get_students():
         response.status_code = 500
         return response
 
-@bp.route('/studentsS/<int:id>', methods=['GET'])
+@bp.route('/<int:id>', methods=['GET'])
 def get_student_by_id(id):
     try:
         query = "SELECT * FROM student WHERE StudentID = %s"
@@ -111,7 +111,7 @@ def get_student_by_id(id):
         return jsonify({"message": "Internal Server Error"}), 500
     
 
-@bp.route('/studentsS/<string:name>/<string:password>', methods=['GET'])
+@bp.route('/login/<string:name>/<string:password>', methods=['GET'])
 def get_student_by_name_and_password(name, password):
     try:
         query = "SELECT * FROM student WHERE username = %s AND password = %s"

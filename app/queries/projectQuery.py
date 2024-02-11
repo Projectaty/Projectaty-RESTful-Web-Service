@@ -11,7 +11,7 @@ def get_projects():
         project_row = execute_query(query, fetch_all=True)
 
         if project_row:
-            response = jsonify(project_row)
+            response = jsonify({"projects":project_row})
             response.status_code = 200
             return response
         else:
